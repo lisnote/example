@@ -6,9 +6,9 @@ import SerialEventTarget from "./event";
  * 3. on 监听事件
  */
 export class SerialPortDevice extends SerialEventTarget {
-  private port: SerialPort | undefined;
-  private reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
-  private writer: WritableStreamDefaultWriter<Uint8Array> | undefined;
+  protected port: SerialPort | undefined;
+  protected reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+  protected writer: WritableStreamDefaultWriter<Uint8Array> | undefined;
   constructor(serialOptions: SerialOptions) {
     super();
     navigator.serial
