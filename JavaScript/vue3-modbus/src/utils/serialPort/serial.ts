@@ -1,58 +1,85 @@
-export type Event = "receive" | "send";
-export class SerialPortDevice {
-  // -------------------------------------------------- 初始化
-  async link(options: SerialOptions): Promise<void> {
-    await this.initPort(options);
-    this.initReader();
+import SerialEventTarget from "./event";
+/**
+ * 串口设备类, 主要有以下功能
+ * 1. send 发送信息
+ * 2. close 关闭串口
+ * 3. on 监听事件
+ */
+export class SerialPortDevice extends SerialEventTarget {
+  private port: SerialPort | undefined;
+  private reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+  private writer: WritableStreamDefaultWriter<Uint8Array> | undefined;
+  constructor(serialOptions: SerialOptions) {
+    super();
+    navigator.serial
+      .getPorts()
+      .then(async (authorizedDevice) => {
+        this.port =
+          authorizedDevice.length === 1
+            ? authorizedDevice[0]
+            : await navigator.serial.requestPort();
+        this.port.readable ?? (await this.port.open(serialOptions));
+        this.initReader();
+      })
+      .catch(console.error);
   }
-  // 连接设备 & 初始化 port
-  protected port: SerialPort | undefined;
-  protected async initPort(options: SerialOptions): Promise<void> {
-    let authorizedDevice = await navigator.serial.getPorts();
-    this.port =
-      authorizedDevice.length === 1
-        ? authorizedDevice[0]
-        : await navigator.serial.requestPort();
-    this.port.readable ?? (await this.port.open(options));
-  }
-  // 监听输入
-  protected async initReader(): Promise<void> {
-    let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
-    if (!this.port?.readable?.locked) {
-      while (true) {
-        reader = this.port?.readable?.getReader();
-        try {
-          while (reader) {
-            const { value } = await reader.read();
-            this.runEventFun("receive", value);
-          }
-        } catch (e) {
-          console.error(e);
+  /**
+   * 返回一个 Promise, 此 Promise 在串口打开时 resolve.
+   * @returns {Promise<void>}
+   */
+  public isReady(): Promise<void> {
+    return new Promise<void>((resolve, rejects) => {
+      const retry = () => {
+        if (this.port) {
+          resolve();
+        } else {
+          setTimeout(retry, 100);
         }
-      }
-    }
+      };
+      retry();
+    });
   }
-
-  // -------------------------------------------------- 事件绑定
-  protected eventFn: { [key: string]: Function[] } = {};
-  public on(event: Event, callback: (...data: any[]) => void) {
-    this.eventFn[event] = this.eventFn[event] ?? [];
-    this.eventFn[event].push(callback);
-  }
-  protected runEventFun(event: Event, ...data: any[]) {
-    this.eventFn[event].forEach((fn) => fn(...data));
-  }
-
-  // -------------------------------------------------- 发送信息
+  /**
+   * 发送数据
+   * @param { number[] } data
+   * @returns { Promise<void> }
+   */
   public async send(data: number[]): Promise<void> {
-    const writer = this.port?.writable?.getWriter();
-    if (!writer) {
+    this.writer = this.writer ?? this.port?.writable?.getWriter();
+    if (!this.writer) {
       console.error("获取 writer 失败");
       return;
     }
-    let message=new Uint8Array(data)
-    this.runEventFun("send", message);
-    await writer.write(message);
-    writer.releaseLock();
+    let message = new Uint8Array(data);
+    this.emit("send", message);
+    await this.writer.write(message);
+  }
+  /**
+   * 关闭串口
+   * @returns { Promise<void> }
+   */
+  public async close(): Promise<void> {
+    console.log({ ...this.port }, this.port);
+    this.reader?.cancel().then(() => {
+      this.writer?.releaseLock();
+      this.port?.close();
+    });
+  }
+  /**
+   * 初始化 Reader
+   */
+  protected async initReader(): Promise<void> {
+    this.reader = this.port?.readable?.getReader();
+    while (this.reader) {
+      try {
+        while (this.reader) {
+          const { value, done } = await this.reader.read();
+          if (done) return;
+          this.emit("data", value);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
   }
 }

@@ -1,3 +1,3 @@
 export * from "./serial";
 export * from "./number";
-export * from "./modbus";
+export * from "./event";

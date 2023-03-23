@@ -1,25 +1,38 @@
 <script lang="ts" setup>
-import { modbusDevice } from "@/utils/serialPort";
-const device = new modbusDevice();
+import { SerialPortDevice, toDecimalArray } from "@/utils/serialPort";
+import { crc16modbus } from "crc";
+import { send } from "process";
 
-device.on("receive", (value) => {
-  console.log("收到", new Array(...value));
-});
-device.on("send", (value) => {
-  console.log("发送", new Array(...value));
-});
+let data = [10, 3, 0, 96, 0, 1];
+data = data.concat(
+  toDecimalArray(crc16modbus(new Uint8Array(data)), 2).reverse()
+);
+let port: SerialPortDevice;
 async function link() {
-  await device.link({
+  port = new SerialPortDevice({
     baudRate: 9600,
     dataBits: 8,
     stopBits: 2,
     parity: "none",
   });
-  // device.send([1, 3, 0, 96, 0, 4]);
-  device.send([3, 3, 0, 96, 0, 4]);
+  port.isReady().then(() => {
+    port.on("send", (data: any) => {
+      console.log("发送", [...data]);
+    });
+    port.on("data", (data: any) => {
+      console.log("收到", [...data], Date.now());
+    });
+  });
 }
-// 功能函数
+async function send() {
+  port.send(data);
+}
+async function close() {
+  port.close();
+}
 </script>
 <template>
   <button @click="link">link</button>
+  <button @click="send">send</button>
+  <button @click="close">close</button>
 </template>
