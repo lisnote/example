@@ -1,0 +1,7 @@
+module.exports = [
+  "https://steamuserimages-a.akamaihd.net/ugc/853856987591209532/598CC1EC74F56DC2D2E18D3197D3B36C4DC11DA2/",
+  "https://steamuserimages-a.akamaihd.net/ugc/853856987591210086/C94718DB3CDE5F6BFF84C464068EB58C206887CD/",
+  "https://steamuserimages-a.akamaihd.net/ugc/853856987591210341/5B920A47B316236206D49A211F0F5842C4DAF8E2/",
+  "https://steamuserimages-a.akamaihd.net/ugc/853856987591210480/7EFB45326F7960B99A9C428B0D07B063BCF121E7/",
+  "https://steamuserimages-a.akamaihd.net/ugc/853856987591210619/D69199DADA16A631388E361DE9FD53EB4ECACA9C/",
+];
