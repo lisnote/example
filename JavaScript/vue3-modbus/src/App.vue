@@ -3,7 +3,7 @@ import { SerialPortDevice, toDecimalArray } from "@/utils/serialPort";
 import { crc16modbus } from "crc";
 import { send } from "process";
 
-let data = [10, 3, 0, 96, 0, 1];
+let data = [10, 3, 0, 96, 0, 8];
 data = data.concat(
   toDecimalArray(crc16modbus(new Uint8Array(data)), 2).reverse()
 );
@@ -30,9 +30,13 @@ async function send() {
 async function close() {
   port.close();
 }
+function log() {
+  console.log(port);
+}
 </script>
 <template>
   <button @click="link">link</button>
   <button @click="send">send</button>
   <button @click="close">close</button>
+  <button @click="log">log</button>
 </template>

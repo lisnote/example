@@ -70,15 +70,25 @@ export class SerialPortDevice extends SerialEventTarget {
    */
   protected async initReader(): Promise<void> {
     this.reader = this.port?.readable?.getReader();
+    let data: number[] = [];
+    let timmer;
+    let dataHandle = () => {
+      this.emit("data", data);
+      data = [];
+    };
     while (this.reader) {
       try {
-        while (this.reader) {
-          const { value, done } = await this.reader.read();
-          if (done) return;
-          this.emit("data", value);
-        }
+        const { value, done } = await this.reader.read();
+        if (done) return;
+        data = data.concat(...value);
+        timmer ? clearTimeout(timmer) : undefined;
+        timmer = setTimeout(dataHandle, 20);
       } catch (e) {
         console.error(e);
+        // await 失败, 读取流异常断开, 重新获取.
+        if (!this.port?.readable?.locked) {
+          this.reader = this.port?.readable?.getReader();
+        }
       }
     }
   }
