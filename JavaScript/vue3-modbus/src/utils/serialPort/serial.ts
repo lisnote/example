@@ -59,7 +59,6 @@ export class SerialPortDevice extends SerialEventTarget {
    * @returns { Promise<void> }
    */
   public async close(): Promise<void> {
-    console.log({ ...this.port }, this.port);
     this.reader?.cancel().then(() => {
       this.writer?.releaseLock();
       this.port?.close();

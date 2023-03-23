@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { ModbusDevice } from "@/utils/serialPort";
-
-let data = [10, 3, 0, 96, 0, 8];
+import { ref, reactive } from "vue";
+let data = ref("10 3 0 96 0 8");
+let msgs = reactive<string[]>([]);
 let port: ModbusDevice;
 async function link() {
   port = new ModbusDevice({
@@ -10,28 +11,26 @@ async function link() {
     stopBits: 2,
     parity: "none",
   });
-  port.isReady().then(() => {
-    port.on("send", (data: any) => {
-      console.log("发送", [...data]);
-    });
-    port.on("data", (data: any) => {
-      console.log("收到", [...data], Date.now());
-    });
+  port.on("send", (data: any) => {
+    msgs.unshift("TX:" + data);
+  });
+  port.on("data", (data: any) => {
+    msgs.unshift("RX:" + data);
   });
 }
 async function send() {
-  port.send(data);
-}
-async function close() {
-  port.close();
-}
-function log() {
-  console.log(port);
+  port.send(data.value.split(" ").map((item) => Number(item)));
 }
 </script>
 <template>
+  <div>说明: 在文本域输入数字, 使用空格隔开数字</div>
+  <div>
+    从机地址, 功能码, 寄存器地址, 寄存器地址, 读取寄存器数量, 读取寄存器数量
+  </div>
+  <textarea v-model="data"></textarea><br />
   <button @click="link">link</button>
   <button @click="send">send</button>
-  <button @click="close">close</button>
-  <button @click="log">log</button>
+  <button @click="port.close">close</button>
+  <button @click="msgs.length = 0">clear</button>
+  <div v-for="item in msgs">{{ item }}</div>
 </template>
