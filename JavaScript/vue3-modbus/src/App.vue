@@ -1,15 +1,10 @@
 <script lang="ts" setup>
-import { SerialPortDevice, toDecimalArray } from "@/utils/serialPort";
-import { crc16modbus } from "crc";
-import { send } from "process";
+import { ModbusDevice } from "@/utils/serialPort";
 
 let data = [10, 3, 0, 96, 0, 8];
-data = data.concat(
-  toDecimalArray(crc16modbus(new Uint8Array(data)), 2).reverse()
-);
-let port: SerialPortDevice;
+let port: ModbusDevice;
 async function link() {
-  port = new SerialPortDevice({
+  port = new ModbusDevice({
     baudRate: 9600,
     dataBits: 8,
     stopBits: 2,
