@@ -1,35 +1,25 @@
-import { SerialPortDevice, toDecimalArray } from ".";
-import { crc16modbus } from "crc";
+import { checkoutCrc, crc16OrderGenerator, SerialPortDevice } from ".";
 
 export class ModbusDevice extends SerialPortDevice {
   /**
    * 发送数据
    * @param { number[] } data
-   * @returns { Promise<void> }
+   * @returns { Promise<void> } 发送结束后 resolve
    */
   public async send(data: number[]): Promise<void> {
-    data = data.concat(
-      toDecimalArray(crc16modbus(new Uint8Array(data)), 2).reverse()
-    );
-    super.send(data);
+    await super.send(crc16OrderGenerator(data));
   }
+
   /**
    * 初始化 Reader
+   * @returns { Promise<void> } 初始化结束后 resolve
    */
   protected async initReader(): Promise<void> {
     this.reader = this.port?.readable?.getReader();
     let data: number[] = [];
     let timmer;
     let dataHandle = () => {
-      const sourceOrder = data.slice(0, -2);
-      const sourceCrcData = data.slice(-2);
-      const crcData = toDecimalArray(
-        crc16modbus(new Uint8Array(sourceOrder)),
-        2
-      ).reverse();
-      if (sourceCrcData[0] === crcData[0] && sourceCrcData[1] === crcData[1]) {
-        this.emit("data", data);
-      }
+      if (checkoutCrc(data)) this.emit("data", data);
       data = [];
     };
     while (this.reader) {
