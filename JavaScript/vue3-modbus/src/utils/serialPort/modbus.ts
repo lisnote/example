@@ -40,7 +40,7 @@ export class ModbusDevice extends SerialPortDevice {
         timmer ? clearTimeout(timmer) : undefined;
         timmer = setTimeout(dataHandle, 20);
       } catch (e) {
-        console.error(e);
+        this.emit("error", e);
         // await 失败, 读取流异常断开, 重新获取.
         if (!this.port?.readable?.locked) {
           this.reader = this.port?.readable?.getReader();

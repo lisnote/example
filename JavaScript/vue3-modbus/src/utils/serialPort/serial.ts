@@ -21,7 +21,7 @@ export class SerialPortDevice extends SerialEventTarget {
         this.port.readable ?? (await this.port.open(serialOptions));
         this.initReader();
       })
-      .catch(console.error);
+      .catch((e) => this.emit("error", e));
   }
   /**
    * 返回一个 Promise, 此 Promise 在串口打开时 resolve.
@@ -47,7 +47,7 @@ export class SerialPortDevice extends SerialEventTarget {
   public async send(data: number[]): Promise<void> {
     this.writer = this.writer ?? this.port?.writable?.getWriter();
     if (!this.writer) {
-      console.error("获取 writer 失败");
+      this.emit("error", new Event("writer 获取失败"));
       return;
     }
     let message = new Uint8Array(data);
@@ -83,7 +83,7 @@ export class SerialPortDevice extends SerialEventTarget {
         timmer ? clearTimeout(timmer) : undefined;
         timmer = setTimeout(dataHandle, 20);
       } catch (e) {
-        console.error(e);
+        this.emit("error", e);
         // await 失败, 读取流异常断开, 重新获取.
         if (!this.port?.readable?.locked) {
           this.reader = this.port?.readable?.getReader();
