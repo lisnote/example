@@ -24,8 +24,8 @@ export class SerialPortDevice extends SerialEventTarget {
       .catch((e) => this.emit("error", e));
   }
   /**
-   * 返回一个 Promise, 此 Promise 在串口打开时 resolve.
-   * @returns {Promise<void>}
+   * 返回一个 Promise, 此 Promise 在串口打开后 resolve.
+   * @returns { Promise<void> } 串口打开后 resolve
    */
   public isReady(): Promise<void> {
     return new Promise<void>((resolve, rejects) => {
@@ -41,8 +41,8 @@ export class SerialPortDevice extends SerialEventTarget {
   }
   /**
    * 发送数据
-   * @param { number[] } data
-   * @returns { Promise<void> }
+   * @param { number[] } data 待发送的指令数组
+   * @returns { Promise<void> } 发送数据后 resolve
    */
   public async send(data: number[]): Promise<void> {
     this.writer = this.writer ?? this.port?.writable?.getWriter();
@@ -56,16 +56,15 @@ export class SerialPortDevice extends SerialEventTarget {
   }
   /**
    * 关闭串口
-   * @returns { Promise<void> }
+   * @returns { Promise<void> } 关闭串口后 resolve
    */
   public async close(): Promise<void> {
-    this.reader?.cancel().then(() => {
-      this.writer?.releaseLock();
-      this.port?.close();
-    });
+    this.writer?.releaseLock();
+    await this.reader?.cancel().finally(() => this.port?.close());
   }
   /**
    * 初始化 Reader
+   * @returns { Promise<void> } 初始化 Reader 后 resolve
    */
   protected async initReader(): Promise<void> {
     this.reader = this.port?.readable?.getReader();
