@@ -1,5 +1,5 @@
 import { SerialPortDevice } from ".";
-import { checkoutCrc, crc16OrderGenerator } from "./crc16";
+import { crc16Checkout, crc16OrderGenerator } from "./crc16";
 
 export class ModbusDevice extends SerialPortDevice {
   /**
@@ -18,9 +18,9 @@ export class ModbusDevice extends SerialPortDevice {
   protected async initReader(): Promise<void> {
     this.reader = this.port?.readable?.getReader();
     let data: number[] = [];
-    let timmer;
+    let timmer: ReturnType<typeof setTimeout> | undefined;
     let dataHandle = () => {
-      if (checkoutCrc(data)) this.emit("data", data);
+      if (crc16Checkout(data)) this.emit("data", data);
       data = [];
     };
     while (this.reader) {

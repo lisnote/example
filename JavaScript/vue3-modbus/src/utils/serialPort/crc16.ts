@@ -32,7 +32,7 @@ export function crc16OrderGenerator(order: number[]): number[] {
  * @param { number[] } order 待检测的指令数组
  * @returns { boolean } 校验结果
  */
-export function checkoutCrc(order: number[]): boolean {
+export function crc16Checkout(order: number[]): boolean {
   const sourceOrder = order.slice(0, -2);
   const sourceCrcData = order.slice(-2);
   const crcData = toDecimalArray(crc16(sourceOrder), 2).reverse();

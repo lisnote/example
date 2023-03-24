@@ -69,7 +69,7 @@ export class SerialPortDevice extends SerialEventTarget {
   protected async initReader(): Promise<void> {
     this.reader = this.port?.readable?.getReader();
     let data: number[] = [];
-    let timmer;
+    let timmer: ReturnType<typeof setTimeout> | undefined;
     let dataHandle = () => {
       this.emit("data", data);
       data = [];
