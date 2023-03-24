@@ -21,7 +21,13 @@ export class ModbusDevice extends SerialPortDevice {
     let data: number[] = [];
     let timmer;
     let dataHandle = () => {
-      if (this.checkOrderCrc(data)) {
+      const sourceOrder = data.slice(0, -2);
+      const sourceCrcData = data.slice(-2);
+      const crcData = toDecimalArray(
+        crc16modbus(new Uint8Array(sourceOrder)),
+        2
+      ).reverse();
+      if (sourceCrcData[0] === crcData[0] && sourceCrcData[1] === crcData[1]) {
         this.emit("data", data);
       }
       data = [];
@@ -41,19 +47,5 @@ export class ModbusDevice extends SerialPortDevice {
         }
       }
     }
-  }
-  /**
-   * 检查指令是否能够通过 crc 校验
-   * @param order 收到的指令
-   * @returns 检查结果
-   */
-  protected checkOrderCrc(order: number[]): boolean {
-    const sourceOrder = order.slice(0, -2);
-    const sourceCrcData = order.slice(-2);
-    const crcData = toDecimalArray(
-      crc16modbus(new Uint8Array(sourceOrder)),
-      2
-    ).reverse();
-    return sourceCrcData[0] === crcData[0] && sourceCrcData[1] === crcData[1];
   }
 }
