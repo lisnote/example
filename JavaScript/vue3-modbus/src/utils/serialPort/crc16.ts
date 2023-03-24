@@ -1,4 +1,4 @@
-import { toDecimalArray } from ".";
+import { toDecimalArray } from "./number";
 
 /**
  * crc16算法

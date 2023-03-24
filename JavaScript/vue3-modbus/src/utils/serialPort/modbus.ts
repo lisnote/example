@@ -1,4 +1,5 @@
-import { checkoutCrc, crc16OrderGenerator, SerialPortDevice } from ".";
+import { SerialPortDevice } from ".";
+import { checkoutCrc, crc16OrderGenerator } from "./crc16";
 
 export class ModbusDevice extends SerialPortDevice {
   /**
