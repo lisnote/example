@@ -1,8 +1,8 @@
 /**
  * 将十进制数字转换为寄存器中的二进制格式
- * @param value 待转换的值
- * @param arrayLength byte 长度
- * @returns {string[]} 二进制**字符串**数组
+ * @param { number } value 待转换的值
+ * @param { number } arrayLength byte 长度
+ * @returns { string[] } 二进制**字符串**数组
  */
 export function toByteArray(value: number, arrayLength: number): string[] {
   let binary = value.toString(2);
@@ -16,9 +16,9 @@ export function toByteArray(value: number, arrayLength: number): string[] {
 
 /**
  * 将十进制数字转换为寄存器中的二进制格式, 再将每个8位转换为一个十进制数字
- * @param value 待转换的值
- * @param arrayLength byte 长度
- * @returns {number[]} 十进制数组
+ * @param { number } value 待转换的值
+ * @param { number } arrayLength byte 长度
+ * @returns { number[] } 十进制数组
  */
 export function toDecimalArray(value: number, arrayLength: number): number[] {
   return toByteArray(value, arrayLength).map((item) => parseInt(item, 2));
