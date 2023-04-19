@@ -60,7 +60,8 @@ export class SerialPortDevice extends SerialEventTarget {
    */
   public async close(): Promise<void> {
     this.writer?.releaseLock();
-    await this.reader?.cancel().finally(() => this.port?.close());
+    await this.reader?.cancel().catch((e) => this.emit("error", e));
+    await this.port?.close().catch((e) => this.emit("error", e));
   }
   /**
    * 初始化 Reader
