@@ -1,0 +1,5 @@
+@forward "./node_modules/element-plus/theme-chalk/src/mixins/config.scss" with (
+  $namespace: "dev"
+);
+
+@use "../node_modules/element-plus/theme-chalk/src/index.scss"
