@@ -1,0 +1,20 @@
+{
+  "name": "extract-picture-from-iconify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  },
+  "dependencies": {
+    "@iconify/json": "^2.2.56",
+    "sharp": "^0.32.0"
+  }
+}
