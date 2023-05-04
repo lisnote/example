@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file" />
+    <button onclick="upload()">上传</button>
+    <script>
+      async function upload() {
+        let input = document.querySelector("input");
+        let file = input.files[0];
+        if (file) {
+          console.log(file);
+          fetch("upload", {
+            method: "POST",
+            headers: { "content-type": file.type },
+            body: new Uint8Array(await file.arrayBuffer()),
+          });
+        } else {
+          console.log("请先选择文件");
+        }
+      }
+    </script>
+  </body>
+</html>
