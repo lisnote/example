@@ -37,6 +37,11 @@ const menuRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/Pie/OutlinePie"),
       },
       {
+        path: "/pie/sector",
+        title: "扇形饼图",
+        component: () => import("@/views/Pie/SectorPie"),
+      },
+      {
         path: "/pie/example",
         title: "生产示例",
         component: () => import("@/views/Pie/ExamplePie"),
