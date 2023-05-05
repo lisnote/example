@@ -27,6 +27,11 @@ const menuRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/Pie/UnlabeledPie"),
       },
       {
+        path: "/pie/dount",
+        title: "空心饼图",
+        component: () => import("@/views/Pie/DountPie"),
+      },
+      {
         path: "/pie/example",
         title: "生产示例",
         component: () => import("@/views/Pie/ExamplePie"),
