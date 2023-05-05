@@ -5,13 +5,10 @@ const chartRef = ref();
 onMounted(() => {
   const myChart = echarts.init(chartRef.value);
 
-  const data = [
-    { value: 1048, name: 1 },
-    { value: 735, name: 2 },
-    { value: 580, name: 3 },
-    { value: 484, name: 4 },
-    { value: 300, name: 5 },
-  ];
+  const data = Array.from({ length: 14 }).map((_v, i) => ({
+    name: i,
+    value: 1,
+  }));
   const totalData = data.reduce((pre, item) => pre + item.value, 0);
   const option: any = {
     series: [
