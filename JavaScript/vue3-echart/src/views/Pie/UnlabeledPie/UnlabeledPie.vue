@@ -8,13 +8,6 @@ onMounted(() => {
     name: i,
     value: ~~(Math.random() * 100),
   }));
-  [
-    { value: 1048, name: 1 },
-    { value: 735, name: 2 },
-    { value: 580, name: 3 },
-    { value: 484, name: 4 },
-    { value: 300, name: 5 },
-  ];
   const option: any = {
     series: [
       {
