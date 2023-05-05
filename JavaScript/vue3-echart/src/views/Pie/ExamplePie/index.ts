@@ -1,2 +1,2 @@
-import Pie from "./Pie.vue";
-export default Pie;
+import ExamplePie from "./ExamplePie.vue";
+export default ExamplePie;
