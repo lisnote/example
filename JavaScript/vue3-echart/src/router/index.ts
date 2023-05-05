@@ -5,6 +5,7 @@ const menuRoutes: RouteRecordRaw[] = [
   {
     path: "/pie",
     title: "饼图",
+    redirect: "/pie/basic",
     children: [
       {
         path: "/pie/basic",
