@@ -10,11 +10,16 @@
   },
   "dependencies": {
     "echarts": "^5.4.2",
-    "vue": "^3.2.47"
+    "element-plus": "^2.3.4",
+    "lodash-es": "^4.17.21",
+    "vue": "^3.2.47",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@types/echarts": "^4.9.17",
+    "@types/node": "^18.16.3",
     "@vitejs/plugin-vue": "^4.1.0",
+    "sass": "^1.62.1",
     "typescript": "^5.0.2",
     "vite": "^4.3.2",
     "vue-tsc": "^1.4.2"
