@@ -43,9 +43,9 @@ const menuRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/Pie/SectorPie"),
       },
       {
-        path: "/pie/radial-gradient",
-        title: "径向渐变饼图",
-        component: () => import("@/views/Pie/RadialGradientPie"),
+        path: "/pie/slow-animation",
+        title: "缓慢动画饼图",
+        component: () => import("@/views/Pie/SlowAnimationPie"),
       },
       {
         path: "/pie/example",
