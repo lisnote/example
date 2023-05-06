@@ -15,7 +15,6 @@ onMounted(() => {
   const percent = 0.75;
   const data = Array.from({ length: 14 })
     .map((_v, i) => {
-      console.log();
       return {
         name: i,
         value: 1,
@@ -134,13 +133,13 @@ onMounted(() => {
     align-items: center;
     .property {
       color: white;
-      font-size: 70px;
+      font-size: 7em;
     }
     .value {
-      font-size: 150px;
+      font-size: 15em;
     }
     .unit {
-      font-size: 70px;
+      font-size: 7em;
     }
   }
 }
