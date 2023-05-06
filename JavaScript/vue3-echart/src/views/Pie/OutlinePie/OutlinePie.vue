@@ -22,11 +22,7 @@ onMounted(() => {
           disabled: true,
           scale: false,
         },
-        data: [
-          {
-            value: 0,
-          },
-        ],
+        data: [1],
       },
       {
         type: "pie",
