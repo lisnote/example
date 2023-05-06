@@ -29,15 +29,28 @@ onMounted(() => {
     .reduce((pre, item) => {
       return pre.concat(blank, item, blank);
     }, [] as any[]);
+  const radius = ["55%", "70%"];
   const option: any = {
     series: [
+      // 径向渐变
       {
-        name: "外边框",
         type: "pie",
-        radius: ["70%", "77%"], //边框大小
+        radius: radius[1],
+        labelLine: {
+          show: false,
+        },
         itemStyle: {
-          borderColor: "#b298eb",
-          borderWidth: 1,
+          color: {
+            global: true,
+            type: "radial",
+            x: myChart.getWidth() / 2,
+            y: myChart.getHeight() / 2,
+            r: (parseFloat(radius[1]) / 100 / 2) * myChart.getWidth(),
+            colorStops: [
+              { offset: 0.7, color: "#0000" },
+              { offset: 1, color: "#82b2eb55" },
+            ],
+          },
         },
         emphasis: {
           disabled: true,
@@ -45,21 +58,29 @@ onMounted(() => {
         },
         animationEasing: "linear",
         animationDuration: 500,
-        data: [
-          {
-            value: 10,
-            itemStyle: {
-              color: "none",
-              decal: {
-                symbol: "none",
-              },
-            },
-          },
-        ],
+        data: [1],
       },
+      // 外边框
+      {
+        name: "外边框",
+        type: "pie",
+        radius: [radius[1], parseFloat(radius[1]) + 7 + "%"], //边框大小
+        itemStyle: {
+          borderColor: "#b298eb",
+          borderWidth: 1,
+          color: "none",
+        },
+        emphasis: {
+          disabled: true,
+          scale: false,
+        },
+        animationDuration: 0,
+        data: [1],
+      },
+      // 数据
       {
         type: "pie",
-        radius: ["55%", "70%"],
+        radius: radius,
         label: {
           show: false,
         },
@@ -101,6 +122,7 @@ onMounted(() => {
     background-color: #07172a;
   }
   .content {
+    user-select: none;
     color: #82b2eb;
     position: absolute;
     top: 0;
