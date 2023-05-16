@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <iframe src="http://localhost:8080/iframe.html"></iframe>
+    <script>
+      const iframe = document.querySelector("iframe");
+      iframe.onload = () => {
+        iframe.contentWindow.postMessage("外部消息", "http://localhost:8080");
+      };
+      addEventListener("message", (event) => {
+        console.log("外部收到", event.data);
+      });
+      function send() {
+        iframe.contentWindow.postMessage("外部消息", "http://localhost:8080");
+      }
+    </script>
+  </body>
+</html>
