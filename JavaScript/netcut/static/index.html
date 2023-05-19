@@ -26,7 +26,7 @@
             method: "POST",
             headers: { "content-type": file.type },
             body: new Uint8Array(await file.arrayBuffer()),
-          });
+          }).then(fetchData);
         } else {
           console.log("请先选择文件");
         }
@@ -41,9 +41,11 @@
         fetch("fetchData")
           .then((resp) => resp.json())
           .then((data) => {
-            file.innerText = data.fileName;
-            file.href = "./" + data.fileName;
             text.value = data.text;
+            if (data.fileName) {
+              file.innerText = data.fileName;
+              file.href = "./upload/" + data.fileName;
+            }
           });
       }
       fetchData();

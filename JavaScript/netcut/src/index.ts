@@ -7,22 +7,20 @@ const port = 8080;
 app.use(
   "/",
   express.static("static"),
-  express.raw({ limit: (1 << 30) * 10, type: "*/*" })
+  // 允许上传最大为1G的任意类型文件
+  express.raw({ limit: 1 << 30, type: "*/*" })
 );
-// 允许上传最大为10G的任意类型文件
-let fileName = "avatar.jpg";
+let fileName = "";
 let text = "";
+fs.mkdirSync("static/upload", { recursive: true });
 app.use("/upload/:fileName", (req, res, next) => {
   fileName = req.params.fileName;
-  fs.writeFileSync("static/" + fileName, req.body);
+  fs.readdirSync("static/upload/").forEach((name) => {
+    fs.unlinkSync("static/upload/" + name);
+  });
+  fs.writeFileSync("static/upload/" + fileName, req.body);
   res.end();
   next();
-  let fileList = fs.readdirSync("static");
-  fileList
-    .filter((name) => name !== "index.html" && name !== fileName)
-    .forEach((name) => {
-      fs.unlinkSync("static/" + name);
-    });
 });
 app.use("/postText", (req, res, next) => {
   text = req.body.toString();
