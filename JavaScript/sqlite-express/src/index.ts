@@ -5,7 +5,7 @@ import express from "express";
 // 初始化
 const sqlite3 = verbose();
 const db = new sqlite3.Database("./temp.sqlite");
-const basePath = encodeURI('/东方夜雀工具箱/backend')
+const basePath = encodeURI("/东方夜雀工具箱/backend");
 db.run(`
 CREATE TABLE
 IF NOT EXISTS dishes (
@@ -23,6 +23,10 @@ IF NOT EXISTS dishes (
 );`);
 const app = express();
 app.listen(9931, () => console.info("http://localhost:9931"));
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  next();
+});
 
 // 查询表长度和页数
 let count = 0;
@@ -48,46 +52,49 @@ const stmt = db.prepare(`
 INSERT INTO dishes ( token, name, cookware, ingredients, features, missingFeatures, price, cookingTime, unlock, description )
 VALUES
   ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );`);
-app.post(`${basePath}/insert`, express.json({ limit: 1 << 20 }), (req, res, next) => {
-  const {
-    token,
-    name,
-    cookware,
-    ingredients,
-    features,
-    missingFeatures,
-    price,
-    cookingTime,
-    unlock,
-    description,
-  } = req.body;
-  stmt.run(
-    Object.values({
+app.post(
+  `${basePath}/insert`,
+  express.json({ limit: 1 << 20 }),
+  (req, res, next) => {
+    const {
       token,
       name,
       cookware,
-      ingredients: JSON.stringify(ingredients),
-      features: JSON.stringify(features),
-      missingFeatures: JSON.stringify(missingFeatures),
+      ingredients,
+      features,
+      missingFeatures,
       price,
       cookingTime,
       unlock,
       description,
-    }),
-    async (err) => {
-      if (err) {
-        res.send({ statusMessage: err.message });
-      } else {
-        res.send({ statusMessage: "success" });
-        await updateCount();
+    } = req.body;
+    stmt.run(
+      Object.values({
+        token,
+        name,
+        cookware,
+        ingredients: JSON.stringify(ingredients),
+        features: JSON.stringify(features),
+        missingFeatures: JSON.stringify(missingFeatures),
+        price,
+        cookingTime,
+        unlock,
+        description,
+      }),
+      async (err) => {
+        if (err) {
+          res.send({ statusMessage: err.message });
+        } else {
+          res.send({ statusMessage: "success" });
+          await updateCount();
+        }
+        next();
       }
-      next();
-    }
-  );
-});
+    );
+  }
+);
 
 // 查询
-console.log(`${basePath}/select/:page`)
 app.use(`${basePath}/select/:page`, (req, res, next) => {
   let page = +req.params.page;
   if (page < 1) {
