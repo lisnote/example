@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "build": "tsc --outDir dist -d --pretty --sourceMap",
-    "start": "node src"
+    "start": "node dist"
   },
   "keywords": [],
   "author": "",
