@@ -12,7 +12,7 @@ IF NOT EXISTS dishes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         token TEXT NOT NULL,
         name TEXT NOT NULL,
-        cookware TEXT CHECK ( cookware IN ( 0, 1, 2, 3 ) ) NOT NULL,
+        cookware TEXT NOT NULL,
         ingredients TEXT NOT NULL,
         features TEXT NOT NULL,
         missingFeatures TEXT DEFAULT '[]',
