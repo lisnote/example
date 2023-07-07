@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>My first three.js app</title>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    /* 2 准心样式 */
+    .cross-hair {
+
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        background-color: white;
+      }
+
+      &::before {
+        height: 20px;
+        width: 2px;
+      }
+
+      &::after {
+        height: 2px;
+        width: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 1 准心 -->
+  <span class="cross-hair"></span>
+  <script type="module" src="./main.js"></script>
+  <!-- 判断是否支持javascript模块 -->
+  <script nomodule>
+    alert('您的浏览器不支持javascript模块');
+  </script>
+</body>
+
+</html>

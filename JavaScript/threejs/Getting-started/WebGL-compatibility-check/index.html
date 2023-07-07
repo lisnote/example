@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>My first three.js app</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module" src="./main.js"></script>
+    <!-- 1 判断是否支持javascript模块 -->
+    <!-- 1.1 不支持模块时执行脚本 -->
+    <script nomodule>
+      // 1.2 不支持javascript魔铠则弹出警告
+      alert('您的浏览器不支持javascript模块');
+    </script>
+  </body>
+</html>
