@@ -25,9 +25,11 @@
       }
       .cursor {
         position: relative;
-        &::after {
-          content: "";
-          border-right: solid 2px gray;
+        &::before {
+          content: " ";
+          left: -1px;
+          position: absolute;
+          border-left: solid 2px gray;
           animation: blink 1s infinite;
         }
       }
