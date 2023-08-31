@@ -15,69 +15,64 @@ import { diffWords } from "diff";
 async function typewriter({
   input,
   index = 0,
-  source = "",
+  sourceText = "",
   el = document.body,
   delay = 100,
 }) {
-  const before = source.slice(0, index);
-  const after = source.slice(index);
-  const target = before + input[0] + after;
-  el.innerHTML = before + input[0] + `<span class="cursor"></span>` + after;
-  if (input.length > 1) {
-    return new Promise((resolve) => {
-      setTimeout(
-        () =>
-          resolve(
-            typewriter({
-              input: input.slice(1),
-              index: index + 1,
-              source: target,
-              delay,
-            })
-          ),
-        delay
-      );
-    });
-  }
-  return target;
+  const cursor = `<span class="cursor"></span>`;
+  const beforeCursor = sourceText.slice(0, index);
+  const afterCursor = sourceText.slice(index);
+  const targetText = beforeCursor + input[0] + afterCursor;
+  const sourceHTML = beforeCursor + cursor + afterCursor;
+  const targetHTML = beforeCursor + input[0] + cursor + afterCursor;
+  el.innerHTML = sourceHTML;
+  await new Promise((resolve) =>
+    setTimeout(() => resolve((el.innerHTML = targetHTML)), delay / 2)
+  );
+  await new Promise((resolve) => setTimeout(resolve, delay / 2));
+  if (input.length == 1) return targetText;
+  return typewriter({
+    input: input.slice(1),
+    index: index + 1,
+    sourceText: targetText,
+    delay,
+  });
 }
 
 // 橡皮擦
 async function eraser({
   index,
   length,
-  source,
+  sourceText,
   el = document.body,
   delay = 100,
 }) {
-  const before = source.slice(0, index - 1);
-  const after = source.slice(index);
-  const target = before + after;
-  el.innerHTML = before + `<span class="cursor"></span>` + after;
-  if (length > 1) {
-    return new Promise((resolve) => {
-      setTimeout(
-        () =>
-          resolve(
-            eraser({
-              index: index - 1,
-              length: length - 1,
-              source: target,
-              el,
-              delay,
-            })
-          ),
-        delay
-      );
-    });
-  }
-  return target;
+  const cursor = `<span class="cursor"></span>`;
+  const beforeCursor = sourceText.slice(0, index - 1);
+  const afterCursor = sourceText.slice(index);
+  const targetText = beforeCursor + afterCursor;
+  const sourceHTML =
+    beforeCursor + sourceText[index - 1] + cursor + afterCursor;
+  const targetHTML = beforeCursor + cursor + afterCursor;
+  el.innerHTML = sourceHTML;
+  await new Promise((resolve) =>
+    setTimeout(() => resolve((el.innerHTML = targetHTML)), delay / 2)
+  );
+  await new Promise((resolve) => setTimeout(resolve, delay / 2));
+  if (length == 1) return targetText;
+  return eraser({
+    index: index - 1,
+    length: length - 1,
+    sourceText: targetText,
+    el,
+    delay,
+  });
 }
 
 // 事务 ----------------------------------------------------------------------
-const sourceText = `JavaScript is a popular programming language used for web development.
+const originalText = `JavaScript is a popular programming language used for web development.
 It allows you to create interactive and dynamic web pages.`;
-const targetText = `JavaScript is a widely-used programming language for building web applications.
+const finalText = `JavaScript is a widely-used programming language for building web applications.
 It enables the creation of responsive and interactive web interfaces.`;
 
 async function textDiffChange({
@@ -86,17 +81,17 @@ async function textDiffChange({
   eraserDelay,
 } = {}) {
   // 1. 打印原文
-  await typewriter({ input: sourceText, delay: typewriterDelay || delay });
+  await typewriter({ input: originalText, delay: typewriterDelay || delay });
   // 2. 操作文本
-  const diff = diffWords(sourceText, targetText);
+  const diff = diffWords(originalText, finalText);
   let indexCount = 0;
-  let workingText = sourceText;
+  let workingText = originalText;
   for (const task of diff) {
     if (task.added) {
       workingText = await typewriter({
         input: task.value,
         index: indexCount,
-        source: workingText,
+        sourceText: workingText,
         delay,
       });
       indexCount += task.value.length;
@@ -104,7 +99,7 @@ async function textDiffChange({
       workingText = await eraser({
         index: indexCount + task.value.length,
         length: task.value.length,
-        source: workingText,
+        sourceText: workingText,
         delay,
       });
     } else {
@@ -113,11 +108,11 @@ async function textDiffChange({
   }
   // 3. 清空文本
   await eraser({
-    source: targetText,
-    index: targetText.length,
-    length: targetText.length,
+    sourceText: finalText,
+    index: finalText.length,
+    length: finalText.length,
     delay: eraserDelay || delay,
   });
   textDiffChange(arguments);
 }
-textDiffChange({ delay: 100, eraserDelay: 1, typewriterDelay: 1 });
+textDiffChange({ delay: 1000, typewriterDelay: 1, eraserDelay: 1 });
