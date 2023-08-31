@@ -140,12 +140,12 @@ async function textDiffChange({
     }
   }
   // 3. 清空文本
-  // await eraser({
-  //   sourceText: finalText,
-  //   index: finalText.length,
-  //   length: finalText.length,
-  //   delay: endDelay || eraserDelay,
-  // });
+  await eraser({
+    sourceText: finalText,
+    index: finalText.length,
+    length: finalText.length,
+    delay: endDelay || eraserDelay,
+  });
   textDiffChange(...arguments);
 }
 textDiffChange({
