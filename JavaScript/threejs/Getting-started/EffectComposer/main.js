@@ -18,11 +18,11 @@ import WebGL from 'three/examples/jsm/capabilities/WebGL';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // 引入后处理扩展库EffectComposer.js
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 // 引入渲染器通道RenderPass
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 // 引入OutlinePass通道
-import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js';
 
 // 判断是否支持WebGL
 if (WebGL.isWebGLAvailable()) {
