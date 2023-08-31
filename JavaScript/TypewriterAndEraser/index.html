@@ -1,20 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="module" src="./index.js"></script>
     <title>Document</title>
     <style>
-        body {
-            white-space: break-spaces;
+      body {
+        white-space: break-spaces;
+      }
+      @keyframes blink {
+        0% {
+          opacity: 1;
         }
+        40% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+        90% {
+          opacity: 0;
+        }
+      }
+      .cursor {
+        position: relative;
+        &::after {
+          content: '';
+          border-right: solid 2px gray;
+          animation: blink 1s infinite;
+        }
+      }
     </style>
-</head>
-
-<body>
-
-</body>
-
+  </head>
+  <body></body>
 </html>
