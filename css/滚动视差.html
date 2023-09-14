@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>滚动视差</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100vh;
+      }
+      .scenery {
+        width: 100%;
+        height: calc(100% + 200px);
+        background-attachment: fixed;
+        background-size: cover;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .title {
+          mix-blend-mode: screen;
+          background-color: white;
+          padding: 0 20px;
+          font-size: 100px;
+          font-weight: bold;
+        }
+        &:nth-child(4n-3) {
+          background: url(./assets/scenery1.png);
+          background-attachment: fixed;
+          background-size: cover;
+        }
+        &:nth-child(4n-1) {
+          background: url(./assets/scenery2.png);
+          background-attachment: fixed;
+          background-size: cover;
+        }
+      }
+      .diamond {
+        width: 100%;
+        height: 300px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        filter: drop-shadow(0 0 100px black);
+        &::before {
+          content: "";
+          height: calc(100% + 400px);
+          width: 100%;
+          display: block;
+          background: url(./assets/scenery0.png);
+          background-position: center;
+          background-size: cover;
+          position: absolute;
+          z-index: -1;
+          clip-path: polygon(0 200px, 0 100%, 100% calc(100% - 200px), 100% 0);
+          filter: blur(3px);
+        }
+        .student-pic {
+          height: calc(100% + 350px);
+          border-bottom: 10px solid white;
+          background: linear-gradient(
+            to top,
+            #ffffff,
+            transparent,
+            transparent
+          );
+          border-bottom-left-radius: 300px;
+          border-bottom-right-radius: 300px;
+        }
+        .student-info {
+          margin-left: 20px;
+          padding: 10px;
+          width: 400px;
+          border-radius: 10px;
+          background-color: #fff5;
+          font-weight: 900;
+          overflow: auto;
+          .name {
+            font-size: x-large;
+            display: block;
+          }
+          .introduce {
+            font-size: large;
+          }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scenery">
+      <div class="title">不知名歌剧社</div>
+      <div class="sub-title">以后会知名吗?</div>
+    </div>
+    <div class="diamond">
+      <img src="./assets/student0.png" class="student-pic" />
+      <div class="student-info">
+        <span class="name">徐哲斌</span>
+        <div class="introduce">
+          自信、领导力强，有艺术细胞，热爱歌剧，是歌剧社的灵魂人物。重视才能并擅长挖掘潜力，基本歌唱和表演也不在话下。
+        </div>
+        <div class="introduce"></div>
+      </div>
+    </div>
+    <div class="scenery"></div>
+    <div class="diamond">
+      <img src="./assets/student1.png" class="student-pic" />
+      <div class="student-info">
+        <span class="name">曾琪涵</span>
+        <span class="introduce">
+          活泼开朗，天生的表演者，对歌剧充满热情，但有时任性。有出色的表演天赋，是歌剧社的欢乐制造者，但也容易情绪化。
+        </span>
+      </div>
+    </div>
+    <div class="scenery"></div>
+    <div class="diamond">
+      <img src="./assets/student2.png" class="student-pic" />
+      <div class="student-info">
+        <span class="name">梁望舒</span>
+        <span class="introduce">
+          安静，聪明，热爱阅读和歌剧，对音乐有深刻的理解。热衷于探索歌剧的深度，是歌剧社的音乐顾问，能够为歌剧社带来独特的视角。
+        </span>
+      </div>
+    </div>
+    <div class="scenery"></div>
+  </body>
+</html>
