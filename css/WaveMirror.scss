@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  .wave-mirror {
+    background-image: url(./assets/scenery0.png);
+    height: calc(100% + 100px);
+    width: calc(100% + 100px);
+    background-size: cover;
+    filter: url(#displacementFilter);
+    transform: scaleY(-1) translate(-50px, 50px);
+  }
+}
