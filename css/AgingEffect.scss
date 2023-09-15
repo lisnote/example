@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+}
+.container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  > * {
+    position: fixed;
+  }
+  .background {
+    width: 110vw;
+    height: 100vh;
+    background-image: url(./assets/scenery2.png);
+    background-size: cover;
+  }
+  .aging-mask {
+    width: 200vw;
+    height: 200vh;
+    background-image: url(./assets/noise.svg);
+    opacity: 0.8;
+    animation: mask-animation linear 1s infinite;
+    mix-blend-mode: screen;
+  }
+}
+@keyframes mask-animation {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    transform: translate(-50%, 0);
+  }
+  75% {
+    transform: translate(0, -50%);
+  }
+}
