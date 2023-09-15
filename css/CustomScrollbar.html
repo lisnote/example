@@ -1,35 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <style>
-      html,
-      body {
-        padding: 0;
-        margin: 0;
-      }
 
-      * {
-        overflow: overlay;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="./CustomScrollbar.scss">
+</head>
 
-      ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-      ::-webkit-scrollbar-corner {
-        background-color: transparent;
-      }
-      ::-webkit-scrollbar-thumb {
-        border-radius: 5px;
-        background: #bfbfbf;
-      }
-    </style>
-  </head>
-
-  <body>
+<body>
+  <div class="container">
     <div style="height: 200vh; width: 200vw">滚动条样式修改且不占用宽度</div>
-  </body>
+  </div>
+</body>
+
 </html>
