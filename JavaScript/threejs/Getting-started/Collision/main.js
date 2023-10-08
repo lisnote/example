@@ -31,7 +31,6 @@ import { Capsule } from 'three/examples/jsm/math/Capsule';
 if (WebGL.isWebGLAvailable()) {
   // 场景 ----------------------------------------------------------------------------------------------------
   const scene = new Scene();
-  const worldOctree = new Octree();
   // 光源
   const directionalLight = new DirectionalLight(0xffffff);
   directionalLight.position.set(-1, 1, -1);
@@ -102,6 +101,7 @@ if (WebGL.isWebGLAvailable()) {
         const colliderX = model.position.x;
         const colliderY = model.position.y;
         const colliderZ = model.position.z;
+        // 2. 碰撞计算
         const result = worldOctree.capsuleIntersect(
           new Capsule(
             { x: colliderX, y: colliderY + colliderRadius, z: colliderZ },
@@ -168,6 +168,8 @@ if (WebGL.isWebGLAvailable()) {
   const floorMat = new Mesh(planeGeometry, planeMaterial);
   floorMat.receiveShadow = true;
   scene.add(floorMat);
+  // 1. 构建八叉树
+  const worldOctree = new Octree();
   worldOctree.fromGraphNode(floorMat);
   // 相机 ----------------------------------------------------------------------------------------------------
   const camera = new PerspectiveCamera(
