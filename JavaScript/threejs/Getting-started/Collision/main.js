@@ -25,7 +25,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js';
 // 引入八叉树
 import { Octree } from 'three/examples/jsm/math/Octree';
-
+import { Capsule } from 'three/examples/jsm/math/Capsule';
 
 // 判断是否支持WebGL
 if (WebGL.isWebGLAvailable()) {
@@ -86,10 +86,41 @@ if (WebGL.isWebGLAvailable()) {
       controls.addEventListener('change', () => {
         character.rotation.set(1.5 * Math.PI, 0, controls.getAzimuthalAngle());
       });
+      // 地面判断
+      let playerOnFloor = false;
       // 模型更新
       const clock = new Clock();
       function updateModel() {
         const deltaT = clock.getDelta();
+        // 重力影响
+        if (!playerOnFloor) {
+          model.position.y -= deltaT;
+          controls.target.y -= deltaT;
+          camera.position.y -= deltaT;
+        }
+        const colliderRadius = 0.35;
+        const colliderX = model.position.x;
+        const colliderY = model.position.y;
+        const colliderZ = model.position.z;
+        const result = worldOctree.capsuleIntersect(
+          new Capsule(
+            { x: colliderX, y: colliderY + colliderRadius, z: colliderZ },
+            { x: colliderX, y: colliderY - colliderRadius + 1.9, z: colliderZ },
+            colliderRadius,
+          ),
+        );
+        playerOnFloor = false;
+        if (result) {
+          playerOnFloor = result.normal.y > 0;
+          const translateY = result.normal.multiplyScalar(result.depth).y;
+          model.position.y += translateY;
+          camera.position.y += translateY;
+        }
+        if (model.position.y < -2) {
+          model.position.y = 2;
+          camera.position.y = 4;
+        }
+        // 动作切换
         mixer.update(deltaT);
         const idleWeight = actions?.idle.weight;
         const runWeight = actions?.run.weight;
@@ -101,6 +132,7 @@ if (WebGL.isWebGLAvailable()) {
           actions.run.setEffectiveWeight(runWeight + deltaT * 2);
           actions.idle.setEffectiveWeight(idleWeight - deltaT * 2);
         }
+        // 坐标移动
         if (isRunning) {
           const runSpeedRate = 8;
           // 1. 获取相机角度
@@ -110,9 +142,13 @@ if (WebGL.isWebGLAvailable()) {
           model.position.z -= Math.cos(angle) * deltaT * runSpeedRate;
           camera.position.x -= Math.sin(angle) * deltaT * runSpeedRate;
           camera.position.z -= Math.cos(angle) * deltaT * runSpeedRate;
-          // 3. 设置相机指向
-          controls.target = new Vector3(model.position.x, 2, model.position.z);
         }
+        // 重置相机指向
+        controls.target = new Vector3(
+          model.position.x,
+          model.position.y + 2,
+          model.position.z,
+        );
         requestAnimationFrame(updateModel);
       }
       updateModel();
@@ -132,6 +168,7 @@ if (WebGL.isWebGLAvailable()) {
   const floorMat = new Mesh(planeGeometry, planeMaterial);
   floorMat.receiveShadow = true;
   scene.add(floorMat);
+  worldOctree.fromGraphNode(floorMat);
   // 相机 ----------------------------------------------------------------------------------------------------
   const camera = new PerspectiveCamera(
     75,
