@@ -8,6 +8,6 @@
     "vite": "^4.3.9"
   },
   "scripts": {
-    "dev": "vite"
+    "dev": "vite --host"
   }
 }
