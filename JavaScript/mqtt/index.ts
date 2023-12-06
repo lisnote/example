@@ -1,6 +1,7 @@
 import mqtt from 'mqtt';
 import type { IClientSubscribeOptions, IClientSubscribeProperties } from 'mqtt';
 import mitt from 'mitt';
+import { readFileSync } from 'fs';
 type Arrayable<T> = T | T[];
 function isString(value: unknown): value is string {
   return value instanceof String;
@@ -8,6 +9,7 @@ function isString(value: unknown): value is string {
 
 // https://github.com/mqttjs/MQTT.js
 // https://test.mosquitto.org/
+// https://test.mosquitto.org/ssl/mosquitto.org.crt
 export class MqttClient {
   private emitter = mitt<{
     [key: string]: {
@@ -49,7 +51,8 @@ export class MqttClient {
 }
 
 (async () => {
-  const client = new MqttClient('mqtt://test.mosquitto.org');
+  const ca = readFileSync('./mosquitto.org.crt').toString();
+  const client = new MqttClient('mqtts://test.mosquitto.org', { ca });
   await client.subscribe('test', (payload) => {
     console.log(payload.toString());
   });
