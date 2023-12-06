@@ -32,6 +32,6 @@ app.use("/fetchData", (req, res, next) => {
   next();
 });
 
-app.listen(port, () =>
-  console.log(`[server]: Server is running at http://localhost:${port}`)
+app.listen(8080,'0.0.0.0', () =>
+  console.log(`[server]: Server is running at http://0.0.0.0:${port}`)
 );

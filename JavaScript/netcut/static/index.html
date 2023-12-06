@@ -22,7 +22,7 @@
         let input = document.querySelector("input");
         let file = input.files[0];
         if (file) {
-          fetch("upload/" + file.name, {
+          fetch(location.pathname+"upload/" + file.name, {
             method: "POST",
             headers: { "content-type": file.type },
             body: new Uint8Array(await file.arrayBuffer()),
