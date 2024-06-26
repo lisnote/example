@@ -4,7 +4,7 @@ const { PDFDocument, PDFName, PDFRawStream } = require('pdf-lib');
 let startPage = 130;
 let pageAdd = -2;
 let sortNumLength = 3;
-let filePath = './封面.pdf';
+let filePath = './test.pdf';
 let outpuDir = './output';
 fs.mkdirSync(outpuDir, { recursive: true });
 async function startExtract() {
